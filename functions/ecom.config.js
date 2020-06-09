@@ -6,7 +6,7 @@
  */
 
 const app = {
-  app_id: 9000,
+  app_id: 120952,
   title: 'Vindi',
   slug: 'vindi',
   type: 'external',
