@@ -18,7 +18,7 @@
         },
         responseType: 'json'
       })
-        .then(data => {
+        .then(function (data) {
           resolve(data.payment_profile.gateway_token)
         })
         .catch(reject)
