@@ -65,61 +65,76 @@ exports.post = ({ appSdk }, req, res) => {
     }
   }
 
-  // setup payment gateway objects
+  // common payment methods data
   const intermediator = {
     name: 'Vindi',
     link: 'https://app.vindi.com.br/',
     code: 'vindi'
   }
-  ;['credit_card', 'banking_billet'].forEach(paymentMethod => {
-    const methodConfig = config[paymentMethod] || {}
-    if (!methodConfig.disable) {
-      const isCreditCard = paymentMethod === 'credit_card'
-      const label = methodConfig.label || (isCreditCard ? 'Cartão de crédito' : 'Boleto bancário')
-      const gateway = {
-        label,
-        icon: methodConfig.icon,
-        text: methodConfig.text,
-        payment_method: {
-          code: paymentMethod,
-          name: `${label} - ${intermediator.name}`
-        },
-        intermediator
-      }
+  const paymentTypes = []
+  if (!config.disable_subscription) {
+    paymentTypes.push('recurrence')
+  }
+  if (!config.disable_bill) {
+    paymentTypes.push('payment')
+  }
 
-      if (isCreditCard) {
-        if (!gateway.icon) {
-          gateway.icon = `${baseUri}/credit-card.png`
+  // setup payment gateway objects
+  ;['credit_card', 'banking_billet'].forEach(paymentMethod => {
+    paymentTypes.forEach(type => {
+      const methodConfig = config[paymentMethod] || {}
+      if (!methodConfig.disable) {
+        const isCreditCard = paymentMethod === 'credit_card'
+        let label = methodConfig.label || (isCreditCard ? 'Cartão de crédito' : 'Boleto bancário')
+        if (type === 'recurrence' && config.subscription_label) {
+          label = config.subscription_label + label
         }
-        gateway.js_client = {
-          script_uri: `${baseUri}/vindi-hash.min.js`,
-          onload_expression: `window._vindiKey="${config.vindi_public_key}";`,
-          cc_hash: {
-            function: '_vindiHash',
-            is_promise: true
+        const gateway = {
+          label,
+          icon: methodConfig.icon,
+          text: methodConfig.text,
+          payment_method: {
+            code: paymentMethod,
+            name: `${label} - ${intermediator.name}`
+          },
+          type,
+          intermediator
+        }
+
+        if (isCreditCard) {
+          if (!gateway.icon) {
+            gateway.icon = `${baseUri}/credit-card.png`
+          }
+          gateway.js_client = {
+            script_uri: `${baseUri}/vindi-hash.min.js`,
+            onload_expression: `window._vindiKey="${config.vindi_public_key}";`,
+            cc_hash: {
+              function: '_vindiHash',
+              is_promise: true
+            }
+          }
+          const { installments } = config
+          if (installments) {
+            // list all installment options and default one
+            addInstallments(amount, installments, gateway, response)
           }
         }
-        const { installments } = config
-        if (installments) {
-          // list all installment options and default one
-          addInstallments(amount, installments, gateway, response)
-        }
-      }
 
-      if (methodConfig.discount) {
-        gateway.discount = methodConfig.discount
-      } else if (
-        discount &&
-        (discount[paymentMethod] === true || (!isCreditCard && discount[paymentMethod] !== false))
-      ) {
-        gateway.discount = discount
-        if (response.discount_option && !response.discount_option.label) {
-          response.discount_option.label = label
+        if (methodConfig.discount) {
+          gateway.discount = methodConfig.discount
+        } else if (
+          discount &&
+          (discount[paymentMethod] === true || (!isCreditCard && discount[paymentMethod] !== false))
+        ) {
+          gateway.discount = discount
+          if (response.discount_option && !response.discount_option.label) {
+            response.discount_option.label = label
+          }
         }
-      }
 
-      response.payment_gateways.push(gateway)
-    }
+        response.payment_gateways.push(gateway)
+      }
+    })
   })
 
   res.send(response)
