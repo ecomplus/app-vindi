@@ -69,7 +69,7 @@ exports.post = ({ appSdk }, req, res) => {
   const intermediator = {
     name: 'Vindi',
     link: 'https://app.vindi.com.br/',
-    code: 'vindi'
+    code: 'vindi_app'
   }
   const paymentTypes = []
   if (!config.disable_subscription) {
