@@ -224,20 +224,6 @@ const app = {
             title: 'Desabilitar boleto',
             description: 'Desabilitar pagamento com boleto bancário via Vindi'
           },
-          days_due_date: {
-            type: 'integer',
-            minimum: 1,
-            maximum: 999,
-            default: 7,
-            title: 'Dias corridos até o vencimento',
-            description: 'Representa diferença de dias entre a data da requisição e a data de vencimento'
-          },
-          instructions: {
-            type: 'string',
-            maxLength: 255,
-            title: 'Intruções do boleto',
-            description: 'Linhas impressas no boleto para instruções ao operador de caixa ou pagador'
-          },
           label: {
             type: 'string',
             maxLength: 50,
@@ -371,6 +357,40 @@ const app = {
           }
         },
         title: 'Parcelamento',
+        description: 'Opções de parcelamento no cartão via Vindi'
+      },
+      hide: false
+    },
+    vindi_plan: {
+      schema: {
+        type: 'object',
+        properties: {
+          interval: {
+            type: 'string',
+            enum: [
+              'days',
+              'months'
+            ],
+            default: 'months',
+            title: 'Intervalo do plano'
+          },
+          interval_count: {
+            type: 'number',
+            minimum: 1,
+            maximum: 99999,
+            default: 1,
+            title: 'Número de intervalos',
+            description: 'Número de intervalos (meses ou dias) dentro de um período'
+          },
+          billing_cycles: {
+            type: 'integer',
+            minimum: 1,
+            maximum: 52,
+            title: 'Máximo de períodos',
+            description: 'Número máximo de períodos em uma assinatura, nulo significa duração indefinida'
+          }
+        },
+        title: 'Plano',
         description: 'Opçãos de parcelamento no cartão via Vindi'
       },
       hide: false
