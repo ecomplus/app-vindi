@@ -18,8 +18,8 @@
         },
         responseType: 'json'
       })
-        .then(function (data) {
-          resolve(data.payment_profile.gateway_token)
+        .then(function (response) {
+          resolve(response.data.payment_profile.gateway_token)
         })
         .catch(reject)
     })
