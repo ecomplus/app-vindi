@@ -162,11 +162,11 @@ const app = {
       title: 'Rótulo para assinatura',
       description: 'Exibido para os clientes junto ao nome da forma de pagamento'
     },
-    disable_subscription: {
+    enable_subscription: {
       schema: {
         type: 'boolean',
         default: false,
-        title: 'Disabilitar assinatura'
+        title: 'Habilitar assinatura'
       },
       hide: false
     },

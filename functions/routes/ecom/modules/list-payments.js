@@ -72,7 +72,7 @@ exports.post = ({ appSdk }, req, res) => {
     code: 'vindi_app'
   }
   const paymentTypes = []
-  if (!config.disable_subscription) {
+  if (config.enable_subscription) {
     paymentTypes.push('recurrence')
   }
   if (!config.disable_bill) {
