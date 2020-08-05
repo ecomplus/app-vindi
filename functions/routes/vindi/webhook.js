@@ -10,6 +10,7 @@ exports.post = ({ appSdk, admin }, req, res) => {
       : (vindiEvent.data.bill || vindiEvent.data.charge)
     if (data && data.id) {
       const isVindiCharge = vindiEvent.type.startsWith('charge_')
+      let axiosVindi
       console.log('> Vindi Hook', vindiEvent.type, data.id)
 
       return new Promise((resolve, reject) => {
@@ -47,10 +48,11 @@ exports.post = ({ appSdk, admin }, req, res) => {
               return getAppData({ appSdk, storeId })
                 .then(config => {
                   // get secure Vindi bill payload
-                  return createVindiAxios(config.vindi_api_key, config.vindi_sandbox)
-                    .get('/bills/' + (isVindiCharge ? data.bill.id : data.id))
+                  axiosVindi = createVindiAxios(config.vindi_api_key, config.vindi_sandbox)
+                  return axiosVindi.get('/bills/' + (isVindiCharge ? data.bill.id : data.id))
                 })
                 .then(({ data }) => ({
+                  orderType: vindiMetadata.order_type,
                   storeId,
                   orderId,
                   vindiBill: data && data.bill ? data.bill : data
@@ -60,13 +62,10 @@ exports.post = ({ appSdk, admin }, req, res) => {
           return {}
         })
 
-        .then(({ storeId, orderId, vindiBill }) => {
+        .then(({ orderType, storeId, orderId, vindiBill }) => {
           if (vindiBill && vindiBill.charges) {
             const vindiCharge = vindiBill.charges[0]
             if (vindiCharge) {
-              // add new transaction status to payment history
-              const resource = `orders/${orderId}/payments_history.json`
-              const method = 'POST'
               let status
               switch (vindiEvent.type) {
                 case 'charge_rejected':
@@ -78,6 +77,15 @@ exports.post = ({ appSdk, admin }, req, res) => {
                 default:
                   status = parseStatus(vindiCharge.status)
               }
+              if (orderType === 'payment') {
+                // single bill
+                // async cancell Vindi bill when transaction is cancelled
+                axiosVindi.delete('/bills/' + (isVindiCharge ? data.bill.id : data.id))
+              }
+
+              // add new transaction status to payment history
+              const resource = `orders/${orderId}/payments_history.json`
+              const method = 'POST'
               const body = {
                 date_time: new Date().toISOString(),
                 status,
