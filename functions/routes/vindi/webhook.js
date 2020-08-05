@@ -77,20 +77,27 @@ exports.post = ({ appSdk, admin }, req, res) => {
                 default:
                   status = parseStatus(vindiCharge.status)
               }
+
               if (orderType === 'payment') {
                 // single bill
                 // async cancell Vindi bill when transaction is cancelled
-                axiosVindi.delete('/bills/' + vindiBill.id)
-                  .catch(error => {
-                    if (error.response) {
-                      const err = new Error('Delete bill error')
-                      err.config = error.config
-                      err.data = JSON.stringify(error.response.data)
-                      err.status = error.response.status
-                    } else {
-                      console.error(error)
-                    }
-                  })
+                switch (status) {
+                  case 'voided':
+                  case 'refunded':
+                  case 'unauthorized':
+                    axiosVindi.delete('/bills/' + vindiBill.id)
+                      .catch(error => {
+                        if (error.response) {
+                          const err = new Error('Delete bill error')
+                          err.config = error.config
+                          err.data = JSON.stringify(error.response.data)
+                          err.status = error.response.status
+                        } else {
+                          console.error(error)
+                        }
+                      })
+                    break
+                }
               }
 
               // add new transaction status to payment history
