@@ -208,9 +208,13 @@ exports.post = ({ appSdk, admin }, req, res) => {
       if (error.response) {
         const { status, data } = error.response
         if (status !== 401 && status !== 403) {
-          err.url = error.config && error.config.url
+          if (error.config) {
+            err.url = error.config.url
+            err.data = JSON.stringify(error.config.data)
+          } else {
+            err.bill = JSON.stringify(vindiBill)
+          }
           err.customer = JSON.stringify(vindiCustomer)
-          err.bill = JSON.stringify(vindiBill)
           err.status = status
           if (typeof data === 'object' && data) {
             err.response = JSON.stringify(data)
