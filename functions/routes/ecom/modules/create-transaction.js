@@ -60,7 +60,6 @@ exports.post = ({ appSdk, admin }, req, res) => {
     data: vindiCustomer
   })
     .then(({ data }) => {
-      console.log(data)
       if (params.payment_method.code === 'credit_card') {
         let installmentsNumber = params.installments_number
         let finalAmount = amount.total
@@ -93,7 +92,7 @@ exports.post = ({ appSdk, admin }, req, res) => {
         }
       }
 
-      vindiBill.customer_id = data.id
+      vindiBill.customer_id = data.customer ? data.customer.id : data.id
       vindiBill.code = String(params.order_number)
       vindiBill.metadata = vindiMetadata
       vindiBill.payment_profile = {
@@ -141,14 +140,15 @@ exports.post = ({ appSdk, admin }, req, res) => {
     })
 
     .then(({ data }) => {
-      const vindiCharge = data.charges[0]
+      const vindiBill = data.bill || data
+      const vindiCharge = vindiBill.charges[0]
       if (data.charges.length && vindiCharge.amount) {
         transaction.amount = vindiCharge.amount
       }
       transaction.intermediator = {
         buyer_id: String(vindiBill.customer_id),
         transaction_code: String(vindiCharge.id),
-        transaction_reference: String(data.id)
+        transaction_reference: String(vindiBill.id)
       }
 
       if (vindiCharge.payment_method) {
@@ -194,7 +194,7 @@ exports.post = ({ appSdk, admin }, req, res) => {
       admin.firestore().collection('charges').doc(vindiCharge.id)
         .set({
           ...vindiMetadata,
-          vindi_bill_id: data.id,
+          vindi_bill_id: vindiBill.id,
           created_at: require('firebase-admin').firestore.Timestamp.fromDate(new Date())
         }, { merge: true })
         .catch(console.error)
