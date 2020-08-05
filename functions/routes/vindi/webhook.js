@@ -9,11 +9,11 @@ exports.post = ({ appSdk, admin }, req, res) => {
     const data = vindiEvent.data.id ? vindiEvent.data
       : (vindiEvent.data.bill || vindiEvent.data.charge)
     if (data && data.id) {
-      let isVindiBill
+      const isVindiCharge = vindiEvent.type.startsWith('charge_')
       console.log('> Vindi Hook', vindiEvent.type, data.id)
 
       return new Promise((resolve, reject) => {
-        if (vindiEvent.type.startsWith('charge_')) {
+        if (isVindiCharge) {
           // console.log('> Searching charge on local database')
           // get metadata from local database
           admin.firestore().collection('charges').doc(String(data.id))
@@ -29,7 +29,6 @@ exports.post = ({ appSdk, admin }, req, res) => {
           switch (vindiEvent.type) {
             case 'bill_paid':
             case 'bill_canceled':
-              isVindiBill = true
               // metadata included on bill payload
               resolve(data.metadata)
           }
@@ -49,7 +48,7 @@ exports.post = ({ appSdk, admin }, req, res) => {
                 .then(config => {
                   // get secure Vindi bill payload
                   return createVindiAxios(config.vindi_api_key, config.vindi_sandbox)
-                    .get('/bills/' + (isVindiBill ? data.id : data.bill.id))
+                    .get('/bills/' + (isVindiCharge ? data.bill.id : data.id))
                 })
                 .then(({ data }) => ({
                   storeId,
@@ -93,8 +92,8 @@ exports.post = ({ appSdk, admin }, req, res) => {
 
         .then(apiResponse => {
           res.sendStatus(apiResponse === null
-            // prevent flood with invalid bill events
-            ? isVindiBill ? 204 : 404
+            // prevent flood with invalid bill (or any) events
+            ? isVindiCharge ? 404 : 204
             // all done successfully
             : 201)
         })
