@@ -94,7 +94,7 @@ exports.post = ({ appSdk, admin }, req, res) => {
       }
 
       vindiBill.customer_id = data.id
-      vindiBill.code = params.order_number
+      vindiBill.code = String(params.order_number)
       vindiBill.metadata = vindiMetadata
       vindiBill.payment_profile = {
         payment_method_code: vindiBill.payment_method_code
