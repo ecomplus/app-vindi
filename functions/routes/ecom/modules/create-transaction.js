@@ -163,15 +163,15 @@ exports.post = ({ appSdk, admin }, req, res) => {
 
     .then(({ data }) => {
       console.log('> Vindi bill:', JSON.stringify(data))
-      const vindiBill = data.bill || data
-      const vindiCharge = vindiBill.charges[0]
+      const createdBill = data.bill || data
+      const vindiCharge = createdBill.charges[0]
       if (vindiCharge.amount) {
-        transaction.amount = vindiCharge.amount
+        transaction.amount = Number(vindiCharge.amount)
       }
       transaction.intermediator = {
         buyer_id: String(vindiBill.customer_id),
         transaction_code: String(vindiCharge.id),
-        transaction_reference: String(vindiBill.id)
+        transaction_reference: String(createdBill.id)
       }
 
       if (vindiCharge.payment_method) {
@@ -218,7 +218,7 @@ exports.post = ({ appSdk, admin }, req, res) => {
         admin.firestore().collection('charges').doc(String(vindiCharge.id))
           .set({
             ...vindiMetadata,
-            vindi_bill_id: vindiBill.id,
+            vindi_bill_id: createdBill.id,
             created_at: require('firebase-admin').firestore.Timestamp.fromDate(new Date())
           }, { merge: true })
           .catch(console.error)
