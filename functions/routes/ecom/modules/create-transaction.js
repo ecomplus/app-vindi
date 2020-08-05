@@ -28,7 +28,7 @@ exports.post = ({ appSdk, admin }, req, res) => {
     name: buyer.fullname,
     email: buyer.email,
     registry_code: buyer.doc_number,
-    code: buyer.customer_id,
+    code: `${buyer.customer_id}:${Date.now()}`,
     phones: [{
       phone_type: !buyer.phone.type || buyer.phone.type === 'personal' ? 'mobile' : 'landline',
       number: `${(buyer.phone.country_code || '55')}${buyer.phone.number}`
