@@ -126,7 +126,6 @@ exports.post = ({ appSdk, admin }, req, res) => {
       garanta que todos sejam mutuamente válidos"
       */
       vindiBill.bill_items = [{
-        product_id: params.order_number,
         amount: finalAmount
       }]
 
