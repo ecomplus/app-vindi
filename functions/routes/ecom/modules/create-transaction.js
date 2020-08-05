@@ -118,7 +118,7 @@ exports.post = ({ appSdk, admin }, req, res) => {
           vindi_api_key: config.vindi_api_key,
           vindi_public_key: config.vindi_public_key,
           vindi_product_id: vindiProductId
-        })
+        }).catch(console.error)
         return vindiProductId
       })
     })
