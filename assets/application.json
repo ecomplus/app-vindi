@@ -308,5 +308,5 @@
     }
   },
   "auth_callback_uri": "https://us-central1-ecom-vindi.cloudfunctions.net/app/ecom/auth-callback",
-  "version": "1.1.0"
+  "version": "1.1.1"
 }
