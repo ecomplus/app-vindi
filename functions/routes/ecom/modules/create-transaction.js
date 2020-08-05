@@ -60,6 +60,7 @@ exports.post = ({ appSdk, admin }, req, res) => {
     data: vindiCustomer
   })
     .then(({ data }) => {
+      console.log(data)
       if (params.payment_method.code === 'credit_card') {
         let installmentsNumber = params.installments_number
         let finalAmount = amount.total
