@@ -24,15 +24,16 @@ exports.post = ({ appSdk, admin }, req, res) => {
                 resolve(false)
               }
             }).catch(reject)
+        } else {
+          switch (vindiEvent.type) {
+            case 'bill_paid':
+            case 'bill_canceled':
+              isVindiBill = true
+              // metadata included on bill payload
+              resolve(data.metadata)
+          }
+          resolve(false)
         }
-        switch (vindiEvent.type) {
-          case 'bill_paid':
-          case 'bill_canceled':
-            isVindiBill = true
-            // metadata included on bill payload
-            return data.metadata
-        }
-        resolve(false)
       })
 
         .then(vindiMetadata => {
