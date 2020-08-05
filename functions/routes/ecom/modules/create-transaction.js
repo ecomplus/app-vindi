@@ -10,7 +10,7 @@ exports.post = ({ appSdk, admin }, req, res) => {
   const axiosVindi = createVindiAxios(config.vindi_api_key)
 
   const orderId = params.order_id
-  const { amount, buyer, to } = params
+  const { amount, buyer, to, items } = params
   console.log('> Transaction #', storeId, orderId)
 
   // https://apx-mods.e-com.plus/api/v1/create_transaction/response_schema.json?store_id=100
@@ -51,14 +51,36 @@ exports.post = ({ appSdk, admin }, req, res) => {
   } else if (params.billing_address) {
     vindiCustomer.address = parseAddress(params.billing_address)
   }
-  let vindiBill = null
+  const vindiBill = {}
 
   axiosVindi({
     url: '/customers',
     method: 'post',
-    timeout: 15000,
+    timeout: 12000,
     data: vindiCustomer
   })
+    .then(({ data }) => {
+      vindiBill.customer_id = data.customer ? data.customer.id : data.id
+
+      // create a product for current order
+      let description = ''
+      items.forEach(({ quantity, sku, name }) => {
+        description += `${quantity}x ${name} (${sku}) / `
+      })
+      return axiosVindi({
+        url: '/products',
+        method: 'post',
+        timeout: 12000,
+        data: {
+          name: `Pedido #${params.order_number}`,
+          code: orderId,
+          status: 'active',
+          description,
+          metadata: vindiMetadata
+        }
+      })
+    })
+
     .then(({ data }) => {
       let finalAmount = Math.floor(amount.total * 100) / 100
       if (params.payment_method.code === 'credit_card') {
@@ -78,19 +100,13 @@ exports.post = ({ appSdk, admin }, req, res) => {
             }
           }
         }
-
-        vindiBill = {
-          payment_method_code: 'credit_card',
-          installments: installmentsNumber
-        }
+        vindiBill.payment_method_code = 'credit_card'
+        vindiBill.installments = installmentsNumber
       } else {
         // banking billet
-        vindiBill = {
-          payment_method_code: 'bank_slip'
-        }
+        vindiBill.payment_method_code = 'bank_slip'
       }
 
-      vindiBill.customer_id = data.customer ? data.customer.id : data.id
       vindiBill.code = String(params.order_number)
       vindiBill.metadata = vindiMetadata
       if (params.credit_card && params.credit_card.hash) {
@@ -126,8 +142,7 @@ exports.post = ({ appSdk, admin }, req, res) => {
       garanta que todos sejam mutuamente válidos"
       */
       vindiBill.bill_items = [{
-        product_id: 14,
-        // product_code: String(params.order_number),
+        product_id: data.product ? data.product.id : data.id,
         amount: finalAmount
       }]
 
