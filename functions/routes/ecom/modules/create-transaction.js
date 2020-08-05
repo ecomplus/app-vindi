@@ -60,6 +60,7 @@ exports.post = ({ appSdk, admin }, req, res) => {
     data: vindiCustomer
   })
     .then(({ data }) => {
+      const round = n => Math.round(n * 100) / 100
       if (params.payment_method.code === 'credit_card') {
         let installmentsNumber = params.installments_number
         let finalAmount = amount.total
@@ -80,7 +81,7 @@ exports.post = ({ appSdk, admin }, req, res) => {
 
         vindiBill = {
           payment_method_code: 'credit_card',
-          amount: Math.floor(finalAmount * 100),
+          amount: round(finalAmount),
           installments: installmentsNumber,
           card_hash: params.credit_card && params.credit_card.hash
         }
@@ -88,7 +89,7 @@ exports.post = ({ appSdk, admin }, req, res) => {
         // banking billet
         vindiBill = {
           payment_method_code: 'bank_slip',
-          amount: Math.floor(amount.total * 100)
+          amount: round(amount.total)
         }
       }
 
@@ -122,12 +123,15 @@ exports.post = ({ appSdk, admin }, req, res) => {
       }
 
       vindiBill.bill_items = []
+      let checkAmount = 0
       items.forEach((item, index) => {
-        const price = Math.round((item.final_price || item.price) * 100) / 100
+        const price = round(item.final_price || item.price)
+        const amount = round(price * item.quantity)
+        checkAmount += amount
         vindiBill.bill_items.push({
           product_id: (index + 1),
           product_code: item.sku || item.variation_id || item.product_id,
-          amount: Math.round(price * item.quantity * 100) / 100,
+          amount,
           description: item.name || item.sku,
           quantity: item.quantity,
           pricing_schema: {
@@ -137,6 +141,45 @@ exports.post = ({ appSdk, admin }, req, res) => {
           }
         })
       })
+
+      // add discount and freight as bill items
+      ;['discount', 'freight'].forEach((field, index) => {
+        const isDiscount = index === 0
+        const price = isDiscount ? -amount[field] : amount[field]
+        if (price) {
+          checkAmount += price
+          const description = isDiscount ? 'DESCONTO' : 'FRETE'
+          vindiBill.bill_items.push({
+            product_id: vindiBill.bill_items.length,
+            product_code: description,
+            amount: price,
+            description,
+            quantity: 1,
+            pricing_schema: {
+              price,
+              minimum_price: price,
+              schema_type: 'flat'
+            }
+          })
+        }
+      })
+
+      const amountDiff = Math.abs(checkAmount - vindiBill.amount)
+      if (amountDiff >= 0.01) {
+        // hard fix for one cent diff with math rounds
+        vindiBill.bill_items.push({
+          product_id: vindiBill.bill_items.length,
+          product_code: 'TAXA',
+          amount: amountDiff,
+          description: 'taxa',
+          quantity: 1,
+          pricing_schema: {
+            price: amountDiff,
+            minimum_price: amountDiff,
+            schema_type: 'flat'
+          }
+        })
+      }
 
       // crate Vindi single bill
       return axiosVindi({
