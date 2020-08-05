@@ -10,7 +10,7 @@ exports.post = ({ appSdk, admin }, req, res) => {
   const axiosVindi = createVindiAxios(config.vindi_api_key)
 
   const orderId = params.order_id
-  const { amount, buyer, to, items } = params
+  const { amount, buyer, to } = params
   console.log('> Transaction #', storeId, orderId)
 
   // https://apx-mods.e-com.plus/api/v1/create_transaction/response_schema.json?store_id=100
@@ -60,10 +60,9 @@ exports.post = ({ appSdk, admin }, req, res) => {
     data: vindiCustomer
   })
     .then(({ data }) => {
-      const round = n => Math.round(n * 100) / 100
+      let finalAmount = Math.floor(amount.total * 100) / 100
       if (params.payment_method.code === 'credit_card') {
         let installmentsNumber = params.installments_number
-        let finalAmount = amount.total
         if (installmentsNumber > 1) {
           if (config.installments) {
             // list all installment options
@@ -72,7 +71,8 @@ exports.post = ({ appSdk, admin }, req, res) => {
               gateway.installment_options.find(({ number }) => number === installmentsNumber)
             if (installmentOption) {
               transaction.installments = installmentOption
-              finalAmount = transaction.installments.total = installmentOption.number * installmentOption.value
+              finalAmount = transaction.installments.total =
+                Math.round(installmentOption.number * installmentOption.value * 100) / 100
             } else {
               installmentsNumber = 1
             }
@@ -81,30 +81,27 @@ exports.post = ({ appSdk, admin }, req, res) => {
 
         vindiBill = {
           payment_method_code: 'credit_card',
-          amount: round(finalAmount),
-          installments: installmentsNumber,
-          card_hash: params.credit_card && params.credit_card.hash
+          installments: installmentsNumber
         }
       } else {
         // banking billet
         vindiBill = {
-          payment_method_code: 'bank_slip',
-          amount: round(amount.total)
+          payment_method_code: 'bank_slip'
         }
       }
 
       vindiBill.customer_id = data.customer ? data.customer.id : data.id
       vindiBill.code = String(params.order_number)
       vindiBill.metadata = vindiMetadata
-      vindiBill.payment_profile = {
-        payment_method_code: vindiBill.payment_method_code
-      }
       if (params.credit_card && params.credit_card.hash) {
-        vindiBill.payment_profile.allow_as_fallback = true
-        vindiBill.payment_profile.gateway_token = params.credit_card.hash
-      }
-      if (params.payer && params.payer.doc_number) {
-        vindiBill.payment_profile.registry_code = params.payer.doc_number
+        vindiBill.payment_profile = {
+          payment_method_code: vindiBill.payment_method_code,
+          allow_as_fallback: true,
+          gateway_token: params.credit_card.hash
+        }
+        if (params.payer && params.payer.doc_number) {
+          vindiBill.payment_profile.registry_code = params.payer.doc_number
+        }
       }
 
       if (params.type === 'recurrence') {
@@ -122,64 +119,16 @@ exports.post = ({ appSdk, admin }, req, res) => {
         }
       }
 
-      vindiBill.bill_items = []
-      let checkAmount = 0
-      items.forEach((item, index) => {
-        const price = round(item.final_price || item.price)
-        const amount = round(price * item.quantity)
-        checkAmount += amount
-        vindiBill.bill_items.push({
-          product_id: (index + 1),
-          product_code: item.sku || item.variation_id || item.product_id,
-          amount,
-          description: item.name || item.sku,
-          quantity: item.quantity,
-          pricing_schema: {
-            price,
-            minimum_price: price,
-            schema_type: 'per_unit'
-          }
-        })
-      })
-
-      // add discount and freight as bill items
-      ;['discount', 'freight'].forEach((field, index) => {
-        const isDiscount = index === 0
-        const price = isDiscount ? -amount[field] : amount[field]
-        if (price) {
-          checkAmount += price
-          const description = isDiscount ? 'DESCONTO' : 'FRETE'
-          vindiBill.bill_items.push({
-            product_id: vindiBill.bill_items.length,
-            product_code: description,
-            amount: price,
-            description,
-            quantity: 1,
-            pricing_schema: {
-              price,
-              minimum_price: price,
-              schema_type: 'flat'
-            }
-          })
-        }
-      })
-
-      const amountDiff = Math.abs(checkAmount - vindiBill.amount)
-      if (amountDiff >= 0.01) {
-        // hard fix for one cent diff with math rounds
-        vindiBill.bill_items.push({
-          product_id: vindiBill.bill_items.length,
-          product_code: 'TAXA',
-          amount: amountDiff,
-          description: 'taxa',
-          quantity: 1,
-          pricing_schema: {
-            price: amountDiff,
-            minimum_price: amountDiff,
-            schema_type: 'flat'
-          }
-        })
-      }
+      /*
+      "Apesar do bill_item suportar um esquema de precificação (pricing_schema) com quantidade (quantity),
+      recomendamos utilizar apenas o parâmetro amount para evitar complexidade desnecessária no desenvolvimento.
+      Se pricing_schema, quantity e amount forem informados ao mesmo tempo,
+      garanta que todos sejam mutuamente válidos"
+      */
+      vindiBill.bill_items = [{
+        product_id: params.order_number,
+        amount: finalAmount
+      }]
 
       // crate Vindi single bill
       return axiosVindi({
