@@ -214,13 +214,15 @@ exports.post = ({ appSdk, admin }, req, res) => {
       res.send({ transaction })
 
       // save Vindi charge do local Firestore
-      admin.firestore().collection('charges').doc(vindiCharge.id)
-        .set({
-          ...vindiMetadata,
-          vindi_bill_id: vindiBill.id,
-          created_at: require('firebase-admin').firestore.Timestamp.fromDate(new Date())
-        }, { merge: true })
-        .catch(console.error)
+      if (vindiCharge.id) {
+        admin.firestore().collection('charges').doc(vindiCharge.id)
+          .set({
+            ...vindiMetadata,
+            vindi_bill_id: vindiBill.id,
+            created_at: require('firebase-admin').firestore.Timestamp.fromDate(new Date())
+          }, { merge: true })
+          .catch(console.error)
+      }
     })
 
     .catch(error => {
