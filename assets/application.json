@@ -65,14 +65,6 @@
       "title": "Rótulo para assinatura",
       "description": "Exibido para os clientes junto ao nome da forma de pagamento"
     },
-    "enable_subscription": {
-      "schema": {
-        "type": "boolean",
-        "default": false,
-        "title": "Habilitar assinatura"
-      },
-      "hide": false
-    },
     "disable_bill": {
       "schema": {
         "type": "boolean",
