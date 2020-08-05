@@ -122,12 +122,19 @@ exports.post = ({ appSdk, admin }, req, res) => {
       }
 
       vindiBill.bill_items = []
-      items.forEach(item => {
+      items.forEach((item, index) => {
+        const price = Math.round((item.final_price || item.price) * 100) / 100
         vindiBill.bill_items.push({
+          product_id: (index + 1),
           product_code: item.sku || item.variation_id || item.product_id,
-          amount: Math.round((item.final_price || item.price) * item.quantity * 100) / 100,
+          amount: Math.round(price * item.quantity * 100) / 100,
           description: item.name || item.sku,
-          quantity: item.quantity
+          quantity: item.quantity,
+          pricing_schema: {
+            price,
+            minimum_price: price,
+            schema_type: 'per_unit'
+          }
         })
       })
 
