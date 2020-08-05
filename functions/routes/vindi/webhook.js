@@ -91,8 +91,8 @@ exports.post = ({ appSdk, admin }, req, res) => {
           return null
         })
 
-        .then(() => {
-          res.sendStatus(200)
+        .then(apiResponse => {
+          res.sendStatus(apiResponse === null ? 404 : 200)
         })
 
         .catch(err => {
