@@ -7,75 +7,79 @@ exports.post = ({ appSdk, admin }, req, res) => {
   const vindiEvent = req.body && req.body.event
   if (vindiEvent && vindiEvent.data && vindiEvent.type) {
     const { data } = vindiEvent
-    let isVindiBill
-    console.log('> Vindi Hook #', vindiEvent.data.id)
+    if (data.id) {
+      let isVindiBill
+      console.log('> Vindi Hook #', data.id)
 
-    new Promise((resolve, reject) => {
-      if (vindiEvent.type.startsWith('charge_')) {
-        // get metadata from local database
-        return admin.firestore().collection('charges').doc(vindiEvent.data.id)
-          .get().then(documentSnapshot => documentSnapshot.data())
-      }
-      switch (vindiEvent.type) {
-        case 'bill_paid':
-        case 'bill_canceled':
-          isVindiBill = true
-          // metadata included on bill payload
-          return vindiEvent.data.metadata
-      }
-      return false
-    })
-
-      .then(vindiMetadata => {
-        if (vindiMetadata) {
-          const storeId = vindiMetadata.store_id
-          const orderId = vindiMetadata.order_id
-          if (storeId && orderId) {
-            console.log('> Webhook for #', storeId, orderId)
-            // read configured E-Com Plus app data
-            return getAppData({ appSdk, storeId })
-              .then(config => {
-                // get secure Vindi bill payload
-                return createVindiAxios(config.vindi_api_key, config.vindi_sandbox)
-                  .get('/bills/' + (isVindiBill ? data.id : data.bill.id))
-              })
-              .then(({ data }) => ({
-                storeId,
-                orderId,
-                vindiBill: data
-              }))
-          }
+      new Promise((resolve, reject) => {
+        if (vindiEvent.type.startsWith('charge_')) {
+          // get metadata from local database
+          return admin.firestore().collection('charges').doc(data.id)
+            .get().then(documentSnapshot => documentSnapshot.data())
         }
-        return {}
+        switch (vindiEvent.type) {
+          case 'bill_paid':
+          case 'bill_canceled':
+            isVindiBill = true
+            // metadata included on bill payload
+            return data.metadata
+        }
+        return false
       })
 
-      .then(({ storeId, orderId, vindiBill }) => {
-        if (vindiBill) {
-          const vindiCharge = vindiBill.charges[0]
-          if (vindiCharge) {
-            // add new transaction status to payment history
-            const resource = `orders/${orderId}/payments_history.json`
-            const method = 'POST'
-            const body = {
-              date_time: new Date().toISOString(),
-              status: parseStatus(vindiCharge.status),
-              notification_code: vindiEvent.type + ';' + vindiEvent.created_at,
-              flags: ['vindi']
+        .then(vindiMetadata => {
+          if (vindiMetadata) {
+            const storeId = vindiMetadata.store_id
+            const orderId = vindiMetadata.order_id
+            if (storeId && orderId) {
+              console.log('> Webhook for #', storeId, orderId)
+              // read configured E-Com Plus app data
+              return getAppData({ appSdk, storeId })
+                .then(config => {
+                  // get secure Vindi bill payload
+                  return createVindiAxios(config.vindi_api_key, config.vindi_sandbox)
+                    .get('/bills/' + (isVindiBill ? data.id : data.bill.id))
+                })
+                .then(({ data }) => ({
+                  storeId,
+                  orderId,
+                  vindiBill: data
+                }))
             }
-            return appSdk.apiRequest(storeId, resource, method, body)
           }
-        }
-        return null
-      })
+          return {}
+        })
 
-      .then(() => {
-        res.sendStatus(200)
-      })
+        .then(({ storeId, orderId, vindiBill }) => {
+          if (vindiBill) {
+            const vindiCharge = vindiBill.charges[0]
+            if (vindiCharge) {
+              // add new transaction status to payment history
+              const resource = `orders/${orderId}/payments_history.json`
+              const method = 'POST'
+              const body = {
+                date_time: new Date().toISOString(),
+                status: parseStatus(vindiCharge.status),
+                notification_code: vindiEvent.type + ';' + vindiEvent.created_at,
+                flags: ['vindi']
+              }
+              return appSdk.apiRequest(storeId, resource, method, body)
+            }
+          }
+          return null
+        })
 
-      .catch(err => {
-        console.error(err)
-        res.sendStatus(500)
-      })
+        .then(() => {
+          res.sendStatus(200)
+        })
+
+        .catch(err => {
+          console.error(err)
+          res.sendStatus(500)
+        })
+    } else {
+      console.log('> Vindi Hook unexpected data:', JSON.stringify(data))
+    }
   }
 
   res.sendStatus(410)
