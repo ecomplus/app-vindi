@@ -2,6 +2,33 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 1.0.0 (2020-08-05)
+
+
+### Features
+
+* **create-transaction:** creating vindi single bill ([14458f9](https://github.com/ecomplus/application-starter/commit/14458f9274a92ef5a984c854728d9600b112912c))
+* **create-transaction:** save Vindi charge do local Firestore ([b72885f](https://github.com/ecomplus/application-starter/commit/b72885fe110ef6f82eccb9e5b93b505713d4d623))
+* **ecom-config:** setup app auth scope, modules and admin settings ([a72c2f1](https://github.com/ecomplus/application-starter/commit/a72c2f106580710d7bf6193bfc7455539d927840))
+* **js-client:** function to create vindi payment profile on client ([594face](https://github.com/ecomplus/application-starter/commit/594face58e5d6b71d5289fd946fea5ff41c950a6))
+* **lib:** common installment options handling ([47dfda4](https://github.com/ecomplus/application-starter/commit/47dfda4557fecffb158c9dc94d211278394c0ac9))
+* **list-payments:** basic list payments module handler ([d596dce](https://github.com/ecomplus/application-starter/commit/d596dce1f172b4f10e205714baa6b38dbef9f50a))
+* **list-payments:** handling payment and recurrence transaction types ([81304af](https://github.com/ecomplus/application-starter/commit/81304af4dddafb0823518363c0184ab7f14e705b))
+* **webhooks:** handling vindi charge/bill webhooks ([02d38ec](https://github.com/ecomplus/application-starter/commit/02d38ec4cf889cc3ca8868d91fd6c64787d9eeb8))
+
+
+### Bug Fixes
+
+* **admin-settings:** remove not used fields and add plan options ([4b98047](https://github.com/ecomplus/application-starter/commit/4b98047e113ff9a8a5fca0d406d306167d03fe9f))
+* **deps:** bump @ecomplus/application-sdk@firestore ([593a06e](https://github.com/ecomplus/application-starter/commit/593a06ebcf3fd66cd14c87b8f839134d70b27b11))
+* **deps:** update all non-major dependencies ([1ad675e](https://github.com/ecomplus/application-starter/commit/1ad675e678ca43cd59bc2b8a7db43e9fd8308bd5))
+* **deps:** update all non-major dependencies ([079bed3](https://github.com/ecomplus/application-starter/commit/079bed39c0dc1961942152fc0e573d505c41c39e))
+* **deps:** update dependency firebase-admin to v9 ([9e841fb](https://github.com/ecomplus/application-starter/commit/9e841fb06a7bcb400ac77dfaf4d9126e5fe84c19))
+* **list-payments:** fix intermediator code ([df40b3f](https://github.com/ecomplus/application-starter/commit/df40b3f888b44689154bcc8e00b2b55b966b7002))
+* **pkg:** functions using node 10 ([7b7b79b](https://github.com/ecomplus/application-starter/commit/7b7b79bfb10ad161a1165808deb511fd3082b21c))
+* **vindi-hash:** fix handling axios response object on success ([55b6928](https://github.com/ecomplus/application-starter/commit/55b6928da98898d0c4c5e07ce2804a59eb6f8798))
+* **vindi-hash:** no es6 syntax (remove arrow function) ([3007a0a](https://github.com/ecomplus/application-starter/commit/3007a0ae743b1046348e9eeb1311c1bac2b739de))
+
 ## [1.0.0-starter.13](https://github.com/ecomplus/application-starter/compare/v1.0.0-starter.12...v1.0.0-starter.13) (2020-06-03)
 
 
