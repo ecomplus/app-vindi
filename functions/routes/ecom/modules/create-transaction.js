@@ -7,7 +7,7 @@ exports.post = ({ appSdk, admin }, req, res) => {
   const { params, application } = req.body
   const { storeId } = req
   const config = Object.assign({}, application.data, application.hidden_data)
-  const axiosVindi = createVindiAxios(config.vindi_api_key)
+  const axiosVindi = createVindiAxios(config.vindi_api_key, config.vindi_sandbox)
 
   const orderId = params.order_id
   const { amount, buyer, to, items } = params

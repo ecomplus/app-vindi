@@ -36,7 +36,7 @@ exports.post = ({ appSdk, admin }, req, res) => {
             return getAppData({ appSdk, storeId })
               .then(config => {
                 // get secure Vindi bill payload
-                return createVindiAxios(config.vindi_api_key)
+                return createVindiAxios(config.vindi_api_key, config.vindi_sandbox)
                   .get('/bills/' + (isVindiBill ? data.id : data.bill.id))
               })
               .then(({ data }) => ({

@@ -178,6 +178,14 @@ const app = {
       },
       hide: false
     },
+    vindi_sandbox: {
+      schema: {
+        type: 'boolean',
+        title: 'Vindi Sandbox',
+        description: 'Vindi API sandbox env'
+      },
+      hide: false
+    },
     credit_card: {
       schema: {
         type: 'object',

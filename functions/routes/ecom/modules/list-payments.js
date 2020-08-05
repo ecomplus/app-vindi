@@ -104,7 +104,8 @@ exports.post = ({ appSdk }, req, res) => {
         if (isCreditCard) {
           gateway.js_client = {
             script_uri: `${baseUri}/vindi-hash.min.js`,
-            onload_expression: `window._vindiKey="${config.vindi_public_key}";`,
+            onload_expression: `window._vindiKey="${config.vindi_public_key}";` +
+              `window._vindiSandbox=${Boolean(config.vindi_sandbox)};`,
             cc_hash: {
               function: '_vindiHash',
               is_promise: true

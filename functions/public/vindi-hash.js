@@ -2,9 +2,10 @@
   window._vindiHash = function (card) {
     return new Promise(function (resolve, reject) {
       // https://atendimento.vindi.com.br/hc/pt-br/articles/115009609107-Como-eu-cadastro-perfis-de-pagamento-
+      var vindiSubdomain = window._vindiSandbox ? 'sandbox-app' : 'app'
       window.axios({
         method: 'post',
-        url: 'https://sandbox-app.vindi.com.br/api/v1/public/payment_profiles',
+        url: 'https://' + vindiSubdomain + '.vindi.com.br/api/v1/public/payment_profiles',
         headers: {
           Authorization: 'Basic ' + window.btoa(window._vindiKey + ':')
         },
