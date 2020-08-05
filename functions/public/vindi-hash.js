@@ -4,7 +4,7 @@
       // https://atendimento.vindi.com.br/hc/pt-br/articles/115009609107-Como-eu-cadastro-perfis-de-pagamento-
       window.axios({
         method: 'post',
-        url: 'https://app.vindi.com.br/api/v1/public/payment_profiles',
+        url: 'https://sandbox-app.vindi.com.br/api/v1/public/payment_profiles',
         headers: {
           Authorization: 'Basic ' + window.btoa(window._vindiKey + ':')
         },
