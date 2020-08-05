@@ -12,7 +12,7 @@ exports.post = ({ appSdk, admin }, req, res) => {
       let isVindiBill
       console.log('> Vindi Hook #', data.id)
 
-      new Promise((resolve, reject) => {
+      return new Promise((resolve, reject) => {
         if (vindiEvent.type.startsWith('charge_')) {
           // get metadata from local database
           return admin.firestore().collection('charges').doc(String(data.id))
