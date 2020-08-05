@@ -6,7 +6,8 @@ exports.post = ({ appSdk, admin }, req, res) => {
   // https://atendimento.vindi.com.br/hc/pt-br/articles/203305800-O-que-s%C3%A3o-e-como-funcionam-os-Webhooks-
   const vindiEvent = req.body && req.body.event
   if (vindiEvent && vindiEvent.data && vindiEvent.type) {
-    const { data } = vindiEvent
+    const data = vindiEvent.data.id ? vindiEvent.data
+      : (vindiEvent.data.bill || vindiEvent.data.charge)
     if (data.id) {
       let isVindiBill
       console.log('> Vindi Hook #', data.id)
@@ -43,7 +44,7 @@ exports.post = ({ appSdk, admin }, req, res) => {
                 .then(({ data }) => ({
                   storeId,
                   orderId,
-                  vindiBill: data
+                  vindiBill: data && data.bill ? data.bill : data
                 }))
             }
           }
@@ -51,7 +52,7 @@ exports.post = ({ appSdk, admin }, req, res) => {
         })
 
         .then(({ storeId, orderId, vindiBill }) => {
-          if (vindiBill) {
+          if (vindiBill && vindiBill.charges) {
             const vindiCharge = vindiBill.charges[0]
             if (vindiCharge) {
               // add new transaction status to payment history
