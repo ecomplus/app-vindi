@@ -15,8 +15,14 @@ exports.post = ({ appSdk, admin }, req, res) => {
       return new Promise((resolve, reject) => {
         if (vindiEvent.type.startsWith('charge_')) {
           // get metadata from local database
-          return admin.firestore().collection('charges').doc(String(data.id))
-            .get().then(documentSnapshot => documentSnapshot && documentSnapshot.data())
+          admin.firestore().collection('charges').doc(String(data.id))
+            .get().then(documentSnapshot => {
+              if (documentSnapshot && documentSnapshot.data) {
+                resolve(documentSnapshot.data())
+              } else {
+                resolve(false)
+              }
+            }).catch(reject)
         }
         switch (vindiEvent.type) {
           case 'bill_paid':
@@ -25,7 +31,7 @@ exports.post = ({ appSdk, admin }, req, res) => {
             // metadata included on bill payload
             return data.metadata
         }
-        return false
+        resolve(false)
       })
 
         .then(vindiMetadata => {
