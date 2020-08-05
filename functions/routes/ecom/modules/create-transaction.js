@@ -164,7 +164,7 @@ exports.post = ({ appSdk, admin }, req, res) => {
     .then(({ data }) => {
       const vindiBill = data.bill || data
       const vindiCharge = vindiBill.charges[0]
-      if (data.charges.length && vindiCharge.amount) {
+      if (vindiCharge.amount) {
         transaction.amount = vindiCharge.amount
       }
       transaction.intermediator = {
