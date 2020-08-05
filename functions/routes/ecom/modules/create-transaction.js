@@ -51,7 +51,37 @@ exports.post = ({ appSdk, admin }, req, res) => {
   } else if (params.billing_address) {
     vindiCustomer.address = parseAddress(params.billing_address)
   }
-  const vindiBill = {}
+
+  // strart mounting Vindi bill object
+  const vindiBill = {
+    code: String(params.order_number),
+    metadata: vindiMetadata
+  }
+
+  let finalAmount = Math.floor(amount.total * 100) / 100
+  if (params.payment_method.code === 'credit_card') {
+    let installmentsNumber = params.installments_number
+    if (installmentsNumber > 1) {
+      if (config.installments) {
+        // list all installment options
+        const { gateway } = addInstallments(amount, config.installments)
+        const installmentOption = gateway.installment_options &&
+          gateway.installment_options.find(({ number }) => number === installmentsNumber)
+        if (installmentOption) {
+          transaction.installments = installmentOption
+          finalAmount = transaction.installments.total =
+            Math.round(installmentOption.number * installmentOption.value * 100) / 100
+        } else {
+          installmentsNumber = 1
+        }
+      }
+    }
+    vindiBill.payment_method_code = 'credit_card'
+    vindiBill.installments = installmentsNumber
+  } else {
+    // banking billet
+    vindiBill.payment_method_code = 'bank_slip'
+  }
 
   axiosVindi({
     url: '/customers',
@@ -65,7 +95,7 @@ exports.post = ({ appSdk, admin }, req, res) => {
       // create a product for current order
       let description = ''
       items.forEach(({ quantity, sku, name }) => {
-        description += `${quantity}x ${name} (${sku}) / `
+        description += `${quantity}x ${name} (${sku}); `
       })
       return axiosVindi({
         url: '/products',
@@ -76,39 +106,16 @@ exports.post = ({ appSdk, admin }, req, res) => {
           code: orderId,
           status: 'active',
           description,
+          pricing_schema: {
+            price: finalAmount,
+            schema_type: 'flat'
+          },
           metadata: vindiMetadata
         }
       })
     })
 
     .then(({ data }) => {
-      let finalAmount = Math.floor(amount.total * 100) / 100
-      if (params.payment_method.code === 'credit_card') {
-        let installmentsNumber = params.installments_number
-        if (installmentsNumber > 1) {
-          if (config.installments) {
-            // list all installment options
-            const { gateway } = addInstallments(amount, config.installments)
-            const installmentOption = gateway.installment_options &&
-              gateway.installment_options.find(({ number }) => number === installmentsNumber)
-            if (installmentOption) {
-              transaction.installments = installmentOption
-              finalAmount = transaction.installments.total =
-                Math.round(installmentOption.number * installmentOption.value * 100) / 100
-            } else {
-              installmentsNumber = 1
-            }
-          }
-        }
-        vindiBill.payment_method_code = 'credit_card'
-        vindiBill.installments = installmentsNumber
-      } else {
-        // banking billet
-        vindiBill.payment_method_code = 'bank_slip'
-      }
-
-      vindiBill.code = String(params.order_number)
-      vindiBill.metadata = vindiMetadata
       if (params.credit_card && params.credit_card.hash) {
         vindiBill.payment_profile = {
           payment_method_code: vindiBill.payment_method_code,
@@ -225,7 +232,7 @@ exports.post = ({ appSdk, admin }, req, res) => {
         if (status !== 401 && status !== 403) {
           if (error.config) {
             err.url = error.config.url
-            err.data = JSON.stringify(error.config.data)
+            err.data = error.config.data
           } else {
             err.bill = JSON.stringify(vindiBill)
           }
