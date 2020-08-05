@@ -215,7 +215,7 @@ exports.post = ({ appSdk, admin }, req, res) => {
 
       // save Vindi charge do local Firestore
       if (vindiCharge.id) {
-        admin.firestore().collection('charges').doc(vindiCharge.id)
+        admin.firestore().collection('charges').doc(String(vindiCharge.id))
           .set({
             ...vindiMetadata,
             vindi_bill_id: vindiBill.id,
