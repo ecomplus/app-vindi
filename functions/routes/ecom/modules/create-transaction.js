@@ -1,12 +1,13 @@
-const axios = require('axios')
 const addInstallments = require('../../../lib/payments/add-installments')
 const parseStatus = require('../../../lib/payments/parse-status')
+const createVindiAxios = require('../../../lib/vindi/create-axios')
 
-exports.post = ({ appSdk }, req, res) => {
+exports.post = ({ appSdk, admin }, req, res) => {
   // https://apx-mods.e-com.plus/api/v1/create_transaction/schema.json?store_id=100
   const { params, application } = req.body
   const { storeId } = req
   const config = Object.assign({}, application.data, application.hidden_data)
+  const axiosVindi = createVindiAxios(config.vindi_api_key)
 
   const orderId = params.order_id
   const { amount, buyer, to, items } = params
@@ -17,15 +18,12 @@ exports.post = ({ appSdk }, req, res) => {
     amount: amount.total
   }
 
-  // https://vindi.github.io/api-docs/dist/
-  const axiosVindi = axios.create({
-    baseURL: 'https://app.vindi.com.br/api/v1/',
-    headers: {
-      Authorization: 'Basic ' + Buffer.from(`${config.vindi_api_key}:`).toString('base64')
-    }
-  })
-
   // must always create Vindi customer before
+  const vindiMetadata = {
+    order_number: params.order_number,
+    store_id: storeId,
+    order_id: orderId
+  }
   const vindiCustomer = {
     name: buyer.fullname,
     email: buyer.email,
@@ -36,11 +34,7 @@ exports.post = ({ appSdk }, req, res) => {
       number: `${(buyer.phone.country_code || '55')}${buyer.phone.number}`
     }],
     notes: `E-Com Plus => Pedido #${params.order_number} em ${params.domain}`,
-    metadata: {
-      order_number: params.order_number,
-      store_id: storeId,
-      order_id: orderId
-    }
+    metadata: vindiMetadata
   }
   const parseAddress = to => ({
     street: to.street,
@@ -100,7 +94,7 @@ exports.post = ({ appSdk }, req, res) => {
 
       vindiBill.customer_id = data.id
       vindiBill.code = params.order_number
-      vindiBill.metadata = vindiCustomer.metadata
+      vindiBill.metadata = vindiMetadata
       vindiBill.payment_profile = {
         payment_method_code: vindiBill.payment_method_code
       }
@@ -194,6 +188,15 @@ exports.post = ({ appSdk }, req, res) => {
         current: parseStatus(vindiCharge.status)
       }
       res.send({ transaction })
+
+      // save Vindi charge do local Firestore
+      admin.firestore().collection('charges').doc(vindiCharge.id)
+        .set({
+          ...vindiMetadata,
+          vindi_bill_id: data.id,
+          created_at: require('firebase-admin').firestore.Timestamp.fromDate(new Date())
+        }, { merge: true })
+        .catch(console.error)
     })
 
     .catch(error => {
