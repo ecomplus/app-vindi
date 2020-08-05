@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.1](https://github.com/ecomplus/application-starter/compare/v1.1.0...v1.1.1) (2020-08-05)
+
+
+### Bug Fixes
+
+* **webhook:** fix handling first promise chain ([7c14d33](https://github.com/ecomplus/application-starter/commit/7c14d330b6e1af8f1a666e812f178df25732f562))
+* **webhook:** fix handling first promise resolve/reject on chain ([6896a43](https://github.com/ecomplus/application-starter/commit/6896a43af0f2ee63eded63a2504ded5de7c11df9))
+* **webhook:** handling charge rejected/refunded separately ([239b763](https://github.com/ecomplus/application-starter/commit/239b763ff72f7eb03f4e8cab4ebf60c7b816e03a))
+* **webhook:** prevent flood with invalid bill events ([7229ed6](https://github.com/ecomplus/application-starter/commit/7229ed6b1a982d9f24300aac5f731c81c0ed213b))
+* **webhook:** returning 404 when charge is not found on local database ([22dafb7](https://github.com/ecomplus/application-starter/commit/22dafb77a6c3d50459b2562645f5cbf5bc54c7e1))
+
 ## [1.1.0](https://github.com/ecomplus/application-starter/compare/v1.0.0...v1.1.0) (2020-08-05)
 
 

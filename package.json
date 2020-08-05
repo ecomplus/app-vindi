@@ -1,7 +1,7 @@
 {
   "name": "@ecomplus/app-vindi",
   "private": true,
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "E-Com Plus app to integrate Vindi for recurring payments",
   "main": "functions/index.js",
   "scripts": {
