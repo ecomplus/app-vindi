@@ -8,7 +8,7 @@ exports.post = ({ appSdk, admin }, req, res) => {
   if (vindiEvent && vindiEvent.data && vindiEvent.type) {
     const data = vindiEvent.data.id ? vindiEvent.data
       : (vindiEvent.data.bill || vindiEvent.data.charge)
-    if (data.id) {
+    if (data && data.id) {
       let isVindiBill
       console.log('> Vindi Hook #', data.id)
 
