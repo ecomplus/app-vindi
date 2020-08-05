@@ -14,14 +14,14 @@ exports.post = ({ appSdk, admin }, req, res) => {
 
       return new Promise((resolve, reject) => {
         if (vindiEvent.type.startsWith('charge_')) {
-          console.log('> Searching charge on local database')
+          // console.log('> Searching charge on local database')
           // get metadata from local database
           admin.firestore().collection('charges').doc(String(data.id))
             .get().then(documentSnapshot => {
               if (documentSnapshot && documentSnapshot.data) {
                 resolve(documentSnapshot.data())
               } else {
-                console.log('> Skipping Vindi charge not found')
+                // console.log('> Skipping Vindi charge not found')
                 resolve(false)
               }
             }).catch(reject)
@@ -38,7 +38,7 @@ exports.post = ({ appSdk, admin }, req, res) => {
       })
 
         .then(vindiMetadata => {
-          console.log('> Vidi metadata', JSON.stringify(vindiMetadata))
+          // console.log('> Vindi metadata', JSON.stringify(vindiMetadata))
           if (vindiMetadata) {
             const storeId = vindiMetadata.store_id
             const orderId = vindiMetadata.order_id
@@ -68,9 +68,20 @@ exports.post = ({ appSdk, admin }, req, res) => {
               // add new transaction status to payment history
               const resource = `orders/${orderId}/payments_history.json`
               const method = 'POST'
+              let status
+              switch (vindiEvent.type) {
+                case 'charge_rejected':
+                  status = 'unauthorized'
+                  break
+                case 'charge_refunded':
+                  status = 'refunded'
+                  break
+                default:
+                  status = parseStatus(vindiCharge.status)
+              }
               const body = {
                 date_time: new Date().toISOString(),
-                status: parseStatus(vindiCharge.status),
+                status,
                 notification_code: vindiEvent.type + ';' + vindiEvent.created_at,
                 flags: ['vindi']
               }
