@@ -133,7 +133,7 @@ exports.post = ({ appSdk, admin }, req, res) => {
 
       // crate Vindi single bill
       return axiosVindi({
-        url: '/bill',
+        url: '/bills',
         method: 'post',
         data: vindiBill
       })
