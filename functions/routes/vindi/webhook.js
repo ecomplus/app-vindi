@@ -92,7 +92,11 @@ exports.post = ({ appSdk, admin }, req, res) => {
         })
 
         .then(apiResponse => {
-          res.sendStatus(apiResponse === null ? 404 : 200)
+          res.sendStatus(apiResponse === null
+            // prevent flood with invalid bill events
+            ? isVindiBill ? 204 : 404
+            // all done successfully
+            : 201)
         })
 
         .catch(err => {
