@@ -105,7 +105,11 @@ exports.post = ({ appSdk, admin }, req, res) => {
           name: 'E-Com Plus orders',
           code: 'ecomplus',
           status: 'active',
-          description: 'Produto pré-definido para pedidos através da plataforma E-Com Plus'
+          description: 'Produto pré-definido para pedidos através da plataforma E-Com Plus',
+          pricing_schema: {
+            price: 100,
+            schema_type: 'flat'
+          }
         }
       }).then(({ data }) => {
         // async save to app data to prevent duplication
