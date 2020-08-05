@@ -10,7 +10,7 @@ exports.post = ({ appSdk, admin }, req, res) => {
       : (vindiEvent.data.bill || vindiEvent.data.charge)
     if (data && data.id) {
       let isVindiBill
-      console.log('> Vindi Hook #', data.id)
+      console.log('> Vindi Hook', vindiEvent.type, data.id)
 
       return new Promise((resolve, reject) => {
         if (vindiEvent.type.startsWith('charge_')) {
@@ -20,6 +20,7 @@ exports.post = ({ appSdk, admin }, req, res) => {
               if (documentSnapshot && documentSnapshot.data) {
                 resolve(documentSnapshot.data())
               } else {
+                console.log('> Skipping Vindi charge not found')
                 resolve(false)
               }
             }).catch(reject)
