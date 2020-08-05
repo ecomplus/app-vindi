@@ -193,7 +193,7 @@ exports.post = ({ appSdk, admin }, req, res) => {
 
       const vindiTransaction = vindiCharge.last_transaction
       if (vindiTransaction) {
-        transaction.intermediator.transaction_id = vindiTransaction.id
+        transaction.intermediator.transaction_id = String(vindiTransaction.id)
         if (vindiTransaction.payment_profile && vindiTransaction.payment_profile.token) {
           transaction.credit_card = {
             token: vindiTransaction.payment_profile.token
