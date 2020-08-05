@@ -22,7 +22,8 @@ exports.post = ({ appSdk, admin }, req, res) => {
   const vindiMetadata = {
     order_number: params.order_number,
     store_id: storeId,
-    order_id: orderId
+    order_id: orderId,
+    order_type: params.type
   }
   const vindiCustomer = {
     name: buyer.fullname,
@@ -91,31 +92,34 @@ exports.post = ({ appSdk, admin }, req, res) => {
   })
     .then(({ data }) => {
       vindiBill.customer_id = data.customer ? data.customer.id : data.id
+      if (config.vindi_product_id > 0) {
+        return config.vindi_product_id
+      }
 
-      // create a product for current order
-      let description = ''
-      items.forEach(({ quantity, sku, name }) => {
-        description += `${quantity}x ${name} (${sku}); `
-      })
+      // must explicitly create a product before bill
       return axiosVindi({
         url: '/products',
         method: 'post',
         timeout: 12000,
         data: {
-          name: `Pedido #${params.order_number}`,
-          code: orderId,
+          name: 'E-Com Plus orders',
+          code: 'ecomplus',
           status: 'active',
-          description,
-          pricing_schema: {
-            price: finalAmount,
-            schema_type: 'flat'
-          },
-          metadata: vindiMetadata
+          description: 'Produto pré-definido para pedidos através da plataforma E-Com Plus'
         }
+      }).then(({ data }) => {
+        // async save to app data to prevent duplication
+        const vindiProductId = data.product ? data.product.id : data.id
+        appSdk.apiApp(storeId, 'hidden_data', 'PATCH', {
+          vindi_api_key: config.vindi_api_key,
+          vindi_public_key: config.vindi_public_key,
+          vindi_product_id: vindiProductId
+        })
+        return vindiProductId
       })
     })
 
-    .then(({ data }) => {
+    .then(vindiProductId => {
       if (params.credit_card && params.credit_card.hash) {
         vindiBill.payment_profile = {
           payment_method_code: vindiBill.payment_method_code,
@@ -148,9 +152,15 @@ exports.post = ({ appSdk, admin }, req, res) => {
       Se pricing_schema, quantity e amount forem informados ao mesmo tempo,
       garanta que todos sejam mutuamente válidos"
       */
+      // create a product for current order
+      let description = ''
+      items.forEach(({ quantity, sku, name }) => {
+        description += `${quantity}x ${name} (${sku}); `
+      })
       vindiBill.bill_items = [{
-        product_id: data.product ? data.product.id : data.id,
-        amount: finalAmount
+        product_id: vindiProductId,
+        amount: finalAmount,
+        description
       }]
 
       // crate Vindi single bill
