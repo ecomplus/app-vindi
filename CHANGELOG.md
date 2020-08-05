@@ -2,6 +2,38 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0](https://github.com/ecomplus/application-starter/compare/v1.0.0...v1.1.0) (2020-08-05)
+
+
+### Features
+
+* **vindi-sandbox:** handle vindi sandbox config option ([af24f7f](https://github.com/ecomplus/application-starter/commit/af24f7f4e0be53e5ee5600071bb44cfe810263d0))
+
+
+### Bug Fixes
+
+* **create-transaction:** add discount and freight as bill items ([013f824](https://github.com/ecomplus/application-starter/commit/013f8241d5ace787423fc3197d3f88fa6ebd7248))
+* **create-transaction:** ensure bill code (order number) is string ([4a42884](https://github.com/ecomplus/application-starter/commit/4a4288485cdc3712a50cb4d6da5a2f83b25cd1b0))
+* **create-transaction:** ensure charge id is set before saving to database ([0e4082b](https://github.com/ecomplus/application-starter/commit/0e4082b092fa18505435eee175d1dfb79c578f71))
+* **create-transaction:** ensure customer code is always new (rand) ([7ae9688](https://github.com/ecomplus/application-starter/commit/7ae9688bb279d652e3c45ba275e607e00f7743ba))
+* **create-transaction:** field 'transaction_id' must be string ([fd88056](https://github.com/ecomplus/application-starter/commit/fd88056fed4d6f31ee12bde5886d32168a0801ce))
+* **create-transaction:** fix error with create bill responde data ([6f912fa](https://github.com/ecomplus/application-starter/commit/6f912fa20177d32cf824d10e60ddb606ab438e39))
+* **create-transaction:** fix handling vindi post requests response (customer & bill) ([6fb4861](https://github.com/ecomplus/application-starter/commit/6fb48615953966ceb8d52047e538c625862de09d))
+* **create-transaction:** fix vindi api 'bills' endpoint ([23bfb3a](https://github.com/ecomplus/application-starter/commit/23bfb3afe28a269d0115dbe0442e2d82d020637c))
+* **create-transaction:** result transaction.amount must be number ([38df526](https://github.com/ecomplus/application-starter/commit/38df526469ed0b875fc56e1f19c487109ab1b681))
+* **create-transaction:** simpler parser for vindi bill items (confuse) ([50c3d77](https://github.com/ecomplus/application-starter/commit/50c3d778a793255b6e276eb64e0a655231704a9b))
+* **create-transaction:** simpler parser for vindi bill items (confuse) ([0d3dd56](https://github.com/ecomplus/application-starter/commit/0d3dd565f128af3c2977dfe2e759af062c8f2b59))
+* **create-transaction:** simpler parser for vindi bill items (it's confused) ([8febd89](https://github.com/ecomplus/application-starter/commit/8febd89776daa82cb244e38dc0105c0390009388))
+* **create-transaction:** try creating product mannualy before bill ([78c4296](https://github.com/ecomplus/application-starter/commit/78c4296f79e7089969916e83e108dc1d11c2c9d0))
+* **create-transaction:** try creating product mannualy with pricing schema ([261b6d4](https://github.com/ecomplus/application-starter/commit/261b6d431eb85ec987cde69cd560743ad005a296))
+* **create-transaction:** try setting bill item 'product_code' ([ac7eb74](https://github.com/ecomplus/application-starter/commit/ac7eb74402d2d7d854ccb3eb35073404e7a53257))
+* **create-transaction:** try setting bill item 'product_code' (string) ([4562223](https://github.com/ecomplus/application-starter/commit/4562223aaffdf389ab8552175c4957de04e9f604))
+* **create-transaction:** try setting vindi bill items price schema and id ([b705144](https://github.com/ecomplus/application-starter/commit/b705144d01007299d2350752ba6011d5be261a00))
+* **firestore:** parse charge id to string to set valid document path ([355c2b0](https://github.com/ecomplus/application-starter/commit/355c2b0a537b9add0011b063db68bc2f5ff11d19))
+* **webhook:** prevent error with undefined data object ([c3fbf8b](https://github.com/ecomplus/application-starter/commit/c3fbf8b8b0bb036e202da99d074e44badaf875cc))
+* **webhook:** return on async process when data is 'validated' ([b0e0dbc](https://github.com/ecomplus/application-starter/commit/b0e0dbcc4e9dd44e71705862326b986a2a1862b5))
+* **webhooks:** fix handling vindi api response objects ([ce2da96](https://github.com/ecomplus/application-starter/commit/ce2da96022946cecb0c4fd772c6d480aaec624b2))
+
 ## 1.0.0 (2020-08-05)
 
 
