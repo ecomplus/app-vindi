@@ -162,7 +162,7 @@ exports.post = ({ appSdk, admin }, req, res) => {
     })
 
     .then(({ data }) => {
-      console.log('> Vindi bill:', JSON.stringify(data))
+      // console.log('> Vindi bill:', JSON.stringify(data))
       const createdBill = data.bill || data
       const vindiCharge = createdBill.charges[0]
       if (vindiCharge.amount) {

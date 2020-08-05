@@ -14,6 +14,7 @@ exports.post = ({ appSdk, admin }, req, res) => {
 
       return new Promise((resolve, reject) => {
         if (vindiEvent.type.startsWith('charge_')) {
+          console.log('> Searching charge on local database')
           // get metadata from local database
           admin.firestore().collection('charges').doc(String(data.id))
             .get().then(documentSnapshot => {
@@ -37,6 +38,7 @@ exports.post = ({ appSdk, admin }, req, res) => {
       })
 
         .then(vindiMetadata => {
+          console.log('> Vidi metadata', JSON.stringify(vindiMetadata))
           if (vindiMetadata) {
             const storeId = vindiMetadata.store_id
             const orderId = vindiMetadata.order_id
