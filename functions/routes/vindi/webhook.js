@@ -80,8 +80,17 @@ exports.post = ({ appSdk, admin }, req, res) => {
               if (orderType === 'payment') {
                 // single bill
                 // async cancell Vindi bill when transaction is cancelled
-                axiosVindi.delete('/bills/' + (isVindiCharge ? data.bill.id : data.id))
-                  .catch(console.error)
+                axiosVindi.delete('/bills/' + vindiBill.id)
+                  .catch(error => {
+                    if (error.response) {
+                      const err = new Error('Delete bill error')
+                      err.config = error.config
+                      err.data = JSON.stringify(error.response.data)
+                      err.status = error.response.status
+                    } else {
+                      console.error(error)
+                    }
+                  })
               }
 
               // add new transaction status to payment history
