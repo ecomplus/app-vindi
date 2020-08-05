@@ -162,6 +162,7 @@ const app = {
       title: 'Rótulo para assinatura',
       description: 'Exibido para os clientes junto ao nome da forma de pagamento'
     },
+    /*
     enable_subscription: {
       schema: {
         type: 'boolean',
@@ -170,6 +171,7 @@ const app = {
       },
       hide: false
     },
+    */
     disable_bill: {
       schema: {
         type: 'boolean',
