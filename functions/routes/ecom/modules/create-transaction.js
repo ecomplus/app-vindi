@@ -102,7 +102,7 @@ exports.post = ({ appSdk, admin }, req, res) => {
         method: 'post',
         timeout: 12000,
         data: {
-          name: 'E-Com Plus orders',
+          name: `Pedido na loja ${params.domain}`,
           code: 'ecomplus',
           status: 'active',
           description: 'Produto pré-definido para pedidos através da plataforma E-Com Plus',
