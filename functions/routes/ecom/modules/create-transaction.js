@@ -114,11 +114,8 @@ exports.post = ({ appSdk, admin }, req, res) => {
       }).then(({ data }) => {
         // async save to app data to prevent duplication
         const vindiProductId = data.product ? data.product.id : data.id
-        appSdk.apiApp(storeId, 'hidden_data', 'PATCH', {
-          vindi_api_key: config.vindi_api_key,
-          vindi_public_key: config.vindi_public_key,
-          vindi_product_id: vindiProductId
-        }).catch(console.error)
+        appSdk.apiApp(storeId, 'hidden_data', 'PATCH', { vindi_product_id: vindiProductId })
+          .catch(console.error)
         return vindiProductId
       })
     })
