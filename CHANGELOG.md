@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.1](https://github.com/ecomplus/application-starter/compare/v1.2.0...v1.2.1) (2020-08-06)
+
+
+### Bug Fixes
+
+* **create-transaction:** edit default vindi product name ([5f59bf8](https://github.com/ecomplus/application-starter/commit/5f59bf85ea7a844b20f5c74ed38881b485ed3e42))
+* **create-transaction:** ensure vindi product has unique code on create ([50954bb](https://github.com/ecomplus/application-starter/commit/50954bb2df2b8ca52adf5bab98291838fb906b81))
+
 ## [1.2.0](https://github.com/ecomplus/application-starter/compare/v1.1.1...v1.2.0) (2020-08-06)
 
 
