@@ -1,6 +1,6 @@
 # App Vindi
 
-[![Deploy](https://github.com/ecomplus/app-vindi/workflows/Deploy/badge.svg)](https://github.com/ecomplus/app-vindi/actions?workflow=Deploy) [![Call refresh tokens](https://github.com/ecomplus/app-vindi/workflows/Call%20refresh%20tokens/badge.svg)](https://github.com/ecomplus/app-vindi/actions?workflow=Call+refresh+tokens) [![Publish](https://github.com/ecomplus/app-vindi/workflows/Publish/badge.svg)](https://github.com/ecomplus/app-vindi/actions?workflow=Publish) [![License MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Deploy](https://github.com/ecomplus/app-vindi/workflows/Deploy/badge.svg)](https://github.com/ecomplus/app-vindi/actions?workflow=Deploy) [![Call refresh tokens](https://github.com/ecomplus/app-vindi/workflows/Call%20refresh%20tokens/badge.svg)](https://github.com/ecomplus/app-vindi/actions?workflow=Call+refresh+tokens) [![Publish](https://github.com/ecomplus/app-vindi/workflows/Publish/badge.svg)](https://github.com/ecomplus/app-vindi/actions?workflow=Publish) [![License GPL](https://img.shields.io/badge/License-GPL-orange.svg)](https://opensource.org/licenses/GPL)
 
 [CHANGELOG](https://github.com/ecomplus/app-vindi/blob/master/CHANGELOG.md)
 
