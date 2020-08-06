@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.0](https://github.com/ecomplus/application-starter/compare/v1.1.1...v1.2.0) (2020-08-06)
+
+
+### Features
+
+* **webhook:** async cancell Vindi bill when transaction is cancelled ([586b6fe](https://github.com/ecomplus/application-starter/commit/586b6fefb8d6fe6b54da4b3135fe843f9b8cb26b))
+
+
+### Bug Fixes
+
+* **create-transaction:** must set pricing schema (any) to create vindi product ([3f300e3](https://github.com/ecomplus/application-starter/commit/3f300e3b22e286cce8320279c1997445f2538911))
+* **promises:** handling async requests rejections (console only) ([a89dbb0](https://github.com/ecomplus/application-starter/commit/a89dbb0a2e4d5e046fbb7520108f457287c53930))
+* **webhook:** check if it's a charge event in place of bill ([74c0e60](https://github.com/ecomplus/application-starter/commit/74c0e60d52aef0ba5b8d0a5fc351de2d718aa242))
+* **webhook:** check status before cancelling vindi bill ([4765e69](https://github.com/ecomplus/application-starter/commit/4765e694d0fa6a097798c8aa38f14acbf27694c3))
+
 ### [1.1.1](https://github.com/ecomplus/application-starter/compare/v1.1.0...v1.1.1) (2020-08-05)
 
 
