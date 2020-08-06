@@ -103,7 +103,7 @@ exports.post = ({ appSdk, admin }, req, res) => {
         timeout: 12000,
         data: {
           name: `Pedido na loja ${params.domain}`,
-          code: 'ecomplus',
+          code: `ecomplus-${Date.now()}`,
           status: 'active',
           description: 'Produto pré-definido para pedidos através da plataforma E-Com Plus',
           pricing_schema: {
