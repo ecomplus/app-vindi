@@ -1,7 +1,7 @@
 {
   "app": {
-    "title": "",
-    "short_description": "",
-    "category": "tools"
+    "title": "Vindi",
+    "short_description": "Pagamento via cartão de crédito e boleto com gateway Vindi",
+    "category": "sales"
   }
 }
