@@ -157,10 +157,13 @@ const app = {
       hide: true
     },
     subscription_label: {
-      type: 'string',
-      maxLength: 50,
-      title: 'Rótulo para assinatura',
-      description: 'Exibido para os clientes junto ao nome da forma de pagamento'
+      schema: {
+        type: 'string',
+        maxLength: 50,
+        title: 'Rótulo para assinatura',
+        description: 'Exibido para os clientes junto ao nome da forma de pagamento'
+      },
+      hide: false
     },
     /*
     enable_subscription: {
