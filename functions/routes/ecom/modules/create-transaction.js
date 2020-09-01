@@ -155,9 +155,16 @@ exports.post = ({ appSdk, admin }, req, res) => {
       */
       // create a product for current order
       let description = ''
-      items.forEach(({ quantity, sku, name }) => {
-        description += `${quantity}x ${name} (${sku}); `
-      })
+      if (items.length === 1) {
+        description = `${items[0].quantity}x ${items[0].sku} - ${items[0].name}`
+      } else {
+        items.forEach(({ quantity, sku }) => {
+          description += `${quantity}x ${sku}; `
+        })
+      }
+      if (description.length > 255) {
+        description = description.substr(0, 250) + ' ...'
+      }
       vindiBill.bill_items = [{
         product_id: vindiProductId,
         amount: finalAmount,
