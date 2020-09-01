@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.1](https://github.com/ecomplus/application-starter/compare/v1.3.0...v1.3.1) (2020-09-01)
+
+
+### Bug Fixes
+
+* **config:** fixing admin settings schema ([#12](https://github.com/ecomplus/application-starter/issues/12)) ([7feb792](https://github.com/ecomplus/application-starter/commit/7feb792b717dfe4176aafb2b7a672213c72196da))
+* **create-transaction:** prevent overtaking vindi description max length ([10f8189](https://github.com/ecomplus/application-starter/commit/10f81892eed6bf27d0522f3cf64b3e08303c360e))
+
 ## [1.3.0](https://github.com/ecomplus/application-starter/compare/v1.2.1...v1.3.0) (2020-08-06)
 
 
