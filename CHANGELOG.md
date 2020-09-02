@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.2](https://github.com/ecomplus/application-starter/compare/v1.3.1...v1.3.2) (2020-09-02)
+
+
+### Bug Fixes
+
+* **list-payments:** fix handling max installments number ([99d9c1d](https://github.com/ecomplus/application-starter/commit/99d9c1d5f88c3553493dac8951cc60f95128d6a3))
+
 ### [1.3.1](https://github.com/ecomplus/application-starter/compare/v1.3.0...v1.3.1) (2020-09-01)
 
 
