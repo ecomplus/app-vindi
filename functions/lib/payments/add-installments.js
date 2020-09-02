@@ -19,7 +19,7 @@ module.exports = (amount, installments, gateway = {}, response) => {
 
     // list installment options
     gateway.installment_options = []
-    for (let number = 2; number < maxInstallments; number++) {
+    for (let number = 2; number <= maxInstallments; number++) {
       const tax = !(maxInterestFree >= number)
       let interest
       if (tax) {
