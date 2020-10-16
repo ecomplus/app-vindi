@@ -9,6 +9,7 @@ exports.post = ({ appSdk, admin }, req, res) => {
     const data = vindiEvent.data.id ? vindiEvent.data
       : (vindiEvent.data.bill || vindiEvent.data.charge)
     if (data && data.id) {
+      const collectionRef = admin.firestore().collection('charges')
       const isVindiCharge = vindiEvent.type.startsWith('charge_')
       let axiosVindi
       console.log('> Vindi Hook', vindiEvent.type, data.id)
@@ -17,7 +18,7 @@ exports.post = ({ appSdk, admin }, req, res) => {
         if (isVindiCharge) {
           // console.log('> Searching charge on local database')
           // get metadata from local database
-          admin.firestore().collection('charges').doc(String(data.id))
+          collectionRef.doc(String(data.id))
             .get().then(documentSnapshot => {
               if (documentSnapshot && documentSnapshot.data) {
                 resolve(documentSnapshot.data())
@@ -30,8 +31,20 @@ exports.post = ({ appSdk, admin }, req, res) => {
           switch (vindiEvent.type) {
             case 'bill_paid':
             case 'bill_canceled':
-              // metadata included on bill payload
-              resolve(data.metadata)
+              if (data.metadata && data.metadata.store_id) {
+                // metadata included on bill payload
+                resolve(data.metadata)
+              } else {
+                collectionRef.where('vindi_bill_id', '==', data.id).limit(1)
+                  .get().then(querySnapshot => {
+                    if (querySnapshot.empty) {
+                      return resolve(false)
+                    }
+                    querySnapshot.forEach(documentSnapshot => {
+                      resolve(documentSnapshot.data())
+                    })
+                  }).catch(reject)
+              }
           }
           resolve(false)
         }
