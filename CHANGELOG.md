@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.4](https://github.com/ecomplus/application-starter/compare/v1.3.3...v1.3.4) (2020-10-16)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies ([#19](https://github.com/ecomplus/application-starter/issues/19)) ([8a94424](https://github.com/ecomplus/application-starter/commit/8a9442400ea35c6fa6af7d4aec55134594141384))
+* **vindi-webhook:** try collection query by bill id if no metadata ([#18](https://github.com/ecomplus/application-starter/issues/18)) ([9249ece](https://github.com/ecomplus/application-starter/commit/9249ece39296b1f50e77186b0376aa283d297623))
+
 ### [1.3.3](https://github.com/ecomplus/application-starter/compare/v1.3.2...v1.3.3) (2020-10-08)
 
 
