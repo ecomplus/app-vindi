@@ -35,7 +35,7 @@ exports.post = ({ appSdk, admin }, req, res) => {
                 // metadata included on bill payload
                 resolve(data.metadata)
               } else {
-                collectionRef.where('vindi_bill_id', '==', data.id).limit(1)
+                return collectionRef.where('vindi_bill_id', '==', Number(data.id)).limit(1)
                   .get().then(querySnapshot => {
                     if (querySnapshot.empty) {
                       return resolve(false)
