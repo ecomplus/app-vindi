@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.5](https://github.com/ecomplus/application-starter/compare/v1.3.4...v1.3.5) (2020-10-22)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies ([#20](https://github.com/ecomplus/application-starter/issues/20)) ([fc55260](https://github.com/ecomplus/application-starter/commit/fc55260b9fb76f802e981ad3cc9b469714e11bbf))
+* **webhook:** return on collection query to get metadata from bill id ([#18](https://github.com/ecomplus/application-starter/issues/18)) ([ac2c424](https://github.com/ecomplus/application-starter/commit/ac2c424c3d84c0995c4d1712b16c675183584e91))
+
 ### [1.3.4](https://github.com/ecomplus/application-starter/compare/v1.3.3...v1.3.4) (2020-10-16)
 
 
