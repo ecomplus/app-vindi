@@ -133,7 +133,7 @@ exports[functionName] = functions.https.onRequest(server)
 console.log(`-- Starting '${app.title}' E-Com Plus app with Function '${functionName}'`)
 
 // schedule update tokens job
-const cron = '45 3,11,19 * * *'
+const cron = '45 */3 * * *'
 exports.updateTokens = functions.pubsub.schedule(cron).onRun(() => {
   return prepareAppSdk().then(appSdk => {
     return appSdk.updateTokens()
