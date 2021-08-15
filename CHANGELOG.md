@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.8](https://github.com/ecomplus/application-starter/compare/v1.3.7...v1.3.8) (2021-08-15)
+
+
+### Bug Fixes
+
+* **deps:** update dependency dotenv to v10 ([#55](https://github.com/ecomplus/application-starter/issues/55)) ([841ec1e](https://github.com/ecomplus/application-starter/commit/841ec1e181f1d0626fcdf0b5b4ee8daa2e211e9c))
+* **vindi-webhook:** handling test events with 200 response [[#64](https://github.com/ecomplus/application-starter/issues/64)] ([bbdd24b](https://github.com/ecomplus/application-starter/commit/bbdd24b19b784fcaa78e653fb9dd199dc5339672))
+
 ### [1.3.7](https://github.com/ecomplus/application-starter/compare/v1.3.6...v1.3.7) (2021-06-18)
 
 
