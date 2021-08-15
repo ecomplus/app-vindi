@@ -6,7 +6,12 @@ exports.post = ({ appSdk, admin }, req, res) => {
   // https://atendimento.vindi.com.br/hc/pt-br/articles/203305800-O-que-s%C3%A3o-e-como-funcionam-os-Webhooks-
   const vindiEvent = req.body && req.body.event
   if (vindiEvent && vindiEvent.data && vindiEvent.type) {
-    const data = vindiEvent.data.id ? vindiEvent.data
+    if (vindiEvent.type === 'test') {
+      return res.sendStatus(200)
+    }
+
+    const data = vindiEvent.data.id
+      ? vindiEvent.data
       : (vindiEvent.data.bill || vindiEvent.data.charge)
     if (data && data.id) {
       const collectionRef = admin.firestore().collection('charges')
