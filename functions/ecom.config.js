@@ -256,6 +256,11 @@ const app = {
             format: 'uri',
             title: 'Ícone',
             description: 'Ícone customizado para a forma de pagamento, URL da imagem'
+          },
+          is_yapay: {
+            type: 'boolean',
+            default: false,
+            title: 'Boleto Yapay'
           }
         },
         title: 'Boleto bancário',
