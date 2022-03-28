@@ -81,7 +81,7 @@ exports.post = ({ appSdk, admin }, req, res) => {
     vindiBill.installments = installmentsNumber
   } else {
     // banking billet
-    vindiBill.payment_method_code = 'bank_slip'
+    vindiBill.payment_method_code = config.banking_billet.bankSlipType ? config.banking_billet.bankSlipType : 'bank_slip'
   }
 
   axiosVindi({

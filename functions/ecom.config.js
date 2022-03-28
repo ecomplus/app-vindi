@@ -256,6 +256,16 @@ const app = {
             format: 'uri',
             title: 'Ícone',
             description: 'Ícone customizado para a forma de pagamento, URL da imagem'
+          },
+          bankSlipType: {
+            type: 'string',
+            enum: [
+              'bank_slip',
+              'bank_slip_yapay'
+            ],
+            default: 'bank_slip_yapay',
+            title: 'Escolha o tipo de boleto utilizado',
+            description: 'Caso utilize Yapay, deverar selecionar a opçao com o descritivo referente, caso seja qualquer outra modalidade de boleto, deverá ser a outra opção'
           }
         },
         title: 'Boleto bancário',
