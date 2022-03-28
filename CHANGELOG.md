@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.4.0](https://github.com/ecomplus/application-starter/compare/v1.3.8...v1.4.0) (2022-03-28)
+
+
+### Features
+
+* **admin-settings:** handle yapay bank slip type ([#101](https://github.com/ecomplus/application-starter/issues/101)) ([d8c5812](https://github.com/ecomplus/application-starter/commit/d8c5812acf28392a1af66a4b7616873ae826579b))
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies ([#59](https://github.com/ecomplus/application-starter/issues/59)) ([cd6e78a](https://github.com/ecomplus/application-starter/commit/cd6e78a8aff99cf1fe3b194166f1e93cec1e576a))
+* **deps:** update all non-major dependencies ([#83](https://github.com/ecomplus/application-starter/issues/83)) ([4653f03](https://github.com/ecomplus/application-starter/commit/4653f0363f50dae3101cf78ba28c707c917ef827))
+
 ### [1.3.8](https://github.com/ecomplus/application-starter/compare/v1.3.7...v1.3.8) (2021-08-15)
 
 
