@@ -10,12 +10,12 @@
     "logs": "firebase functions:log"
   },
   "engines": {
-    "node": "18"
+    "node": "18.20.8"
   },
   "dependencies": {
-    "@ecomplus/application-sdk": "^22.0.0-firestore.1.15.6",
-    "@google-cloud/firestore": "^7.11.3",
-    "express": "^4.17.3",
+    "@ecomplus/application-sdk": "^22.0.0-firestore.1.15.7",
+    "@google-cloud/firestore": "^7.11.4",
+    "express": "^4.21.2",
     "firebase-admin": "^11.11.1",
     "firebase-functions": "^4.9.0"
   },
