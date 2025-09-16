@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.1](https://github.com/ecomplus/application-starter/compare/v1.4.0...v1.4.1) (2025-09-16)
+
+
+### Bug Fixes
+
+* update vindi hash script to use native browser fetch in place of axios ([b60a806](https://github.com/ecomplus/application-starter/commit/b60a806b14f1140981472187ffd8c4ab19ea7bcd))
+
 ## [1.4.0](https://github.com/ecomplus/application-starter/compare/v1.3.8...v1.4.0) (2022-03-28)
 
 
